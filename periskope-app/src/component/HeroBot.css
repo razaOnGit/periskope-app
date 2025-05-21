@@ -1,0 +1,101 @@
+/* HeroBot.css */
+.telegram-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Bot toggle button styling */
+.telegram-bot-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 50px;
+  background: #198a26;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 10000;
+}
+
+.telegram-container.closed .telegram-bot-toggle {
+  border-radius: 16px;
+}
+
+.telegram-container.open .telegram-bot-toggle {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.bot-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bot-label {
+  color: white;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+}
+
+.close-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Bot container styling */
+.bot-container {
+  width: 376px;
+  max-width: 97vw;
+  height: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  bottom: 0;
+}
+
+.bot-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+/* Animation for bot icon */
+.telegram-bot-toggle:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .telegram-container {
+    left: 10px;
+    bottom: 20px;
+  }
+  
+  .bot-container {
+    width: 90vw;
+    height: 70vh;
+  }
+}

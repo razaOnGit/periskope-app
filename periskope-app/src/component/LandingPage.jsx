@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css';
 import Footer from './Footer';
 import Hero from './Hero';
+import HeroSection from './HeroBot';
 
 const LandingPage = () => {
   return (
@@ -32,6 +33,11 @@ const LandingPage = () => {
           </div>
         </a>
       </div>
+
+      {/* Sticky Telegram HeroSection */}
+      {/* <div className="telegram-sticky"> */}
+        <HeroSection />
+      {/* </div> */}
 
       <section>
         <div className="hero-section">
@@ -73,9 +79,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-   <Hero />
-    <Footer /> 
-     </>
+      <Hero />
+      <Footer /> 
+    </>
   );
 };
 
