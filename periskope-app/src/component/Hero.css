@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Martel+Sans:wght@200;300;400;600;700;800;900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Martel+Sans:wght@200;300;400;600;700;800;900&display=swap');
+
+.whatsapp-section {
+  padding: 4rem 2rem;
+  background-color: #fff;
+}
+
+.whatsapp-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 2rem 1rem;
+}
+
+.left-column {
+  flex: 1;
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.left-column .text-content {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-family: Manrope, "Manrope Placeholder", sans-serif;
+  text-align: center; 
+      width: 192%;
+    margin-left: 43px;
+    padding: 58px;
+}
+
+.text-content h2 {
+  font-size: 54px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 2rem;
+  font-family: Manrope, "Manrope Placeholder", sans-serif;
+}
+
+.text-content .highlight {
+  color: #25D366; /* WhatsApp green */
+}
+
+
+.info-block {
+  position: relative;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.info-block h4 {
+  color: #25D366;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  font-family: Inter, "Inter Placeholder", sans-serif;
+display: flex;
+  font-weight: 600;
+}
+
+.info-block h3 {
+  font-size: 48px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.info-block ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.info-block li {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.info-block li span {
+  color: #25D366;
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.demo-button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.image-content {
+  flex: 1;
+  min-width: 350px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: 391px;
+}
+
+.image-content img {
+  max-width: 181%;
+  float: left;
+  width: 550px; 
+  height: auto;
+  border-radius: 24px;
+  background: #f6fef9;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 0;
+  margin: 0;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 98px;
+}
+
+/* Responsive for mobile */
+
+/* iPhone 14 Pro and similar devices */
+@media only screen 
+  and (max-device-width: 430px) 
+  and (-webkit-min-device-pixel-ratio: 3) { 
+  .whatsapp-content {
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  
+  .left-column .text-content {
+    width: 100%;
+    margin-left: 0;
+    padding: 16px 0;
+  }
+  
+  .text-content h2 {
+    font-size: 32px;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+  .info-block h3 {
+    font-size: 24px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  
+  .image-content {
+    justify-content: center;
+    margin: 2rem 0;
+    min-width: 100%;
+  }
+  
+  .image-content img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 16px;
+    margin: 0;
+  }
+  
+  .demo-button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 14px 0;
+    margin-top: 1rem;
+  }
+}
+
+/* Tablets and smaller devices */
+@media (min-width: 431px) and (max-width: 768px) {
+  .whatsapp-content {
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 24px;
+  }
+  
+  .left-column .text-content {
+    width: 100%;
+    margin-left: 0;
+    padding: 24px 0;
+  }
+  
+  .text-content h2 {
+    font-size: 36px;
+    text-align: center;
+  }
+  
+  .info-block h3 {
+    font-size: 28px;
+    text-align: center;
+  }
+  
+  .image-content {
+    margin: 2rem auto;
+    justify-content: center;
+  }
+  
+  .image-content img {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+/* Larger mobile devices and small tablets */
+@media (min-width: 376px) and (max-width: 430px) {
+  .text-content h2 {
+    font-size: 28px;
+  }
+  
+  .info-block h3 {
+    font-size: 22px;
+  }
+  
+  .image-content img {
+    max-width: 90%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 375px) {
+  .text-content h2 {
+    font-size: 26px;
+  }
+  
+  .info-block h3 {
+    font-size: 20px;
+  }
+  
+  .info-block li {
+    font-size: 14px;
+  }
+  
+  .demo-button {
+    padding: 12px 0;
+  }
+}
