@@ -75,33 +75,93 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
     }
   };
 
-  const handleCommandClick = (command) => {
-    setInputText(command);
-    // Auto-send the command
-    const sendButton = document.querySelector('.send-button');
-    if (sendButton) {
-      sendButton.click();
+  const handleCommandClick = async (command) => {
+    // Add user message
+    const userMessage = {
+      id: Date.now(),
+      text: command,
+      sender: "user",
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Show typing indicator
+    setIsTyping(true);
+    
+    try {
+      // Send command to backend
+      const response = await fetch('http://localhost:5000/api/process-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: command })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Add bot response with markdown formatting
+        const botResponse = {
+          id: Date.now() + 1,
+          text: data.message,
+          sender: "bot",
+          timestamp: new Date(),
+          type: data.type || 'info'
+        };
+        setMessages(prev => [...prev, botResponse]);
+      } else {
+        throw new Error(data.error || 'Failed to process command');
+      }
+    } catch (error) {
+      console.error('Error processing command:', error);
+      const errorResponse = {
+        id: Date.now() + 1,
+        text: 'Sorry, I encountered an error. Please try again later.',
+        sender: "bot",
+        timestamp: new Date(),
+        type: 'error'
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
-  const renderCommandButtons = () => {
-    const commands = [
-      { command: '/features', label: 'See our features' },
-      { command: '/pricing', label: 'View pricing plans' },
-      { command: '/casestudies', label: 'Read success stories' },
-      { command: '/help', label: 'Show this help message' }
+  const renderCommandButtons = (shouldShow = true) => {
+    if (!shouldShow) return null;
+    
+    const buttons = [
+      { command: '/features', label: 'Features', icon: '🚀' },
+      { command: '/pricing', label: 'Pricing', icon: '💰' },
+      { command: '/casestudies', label: 'Case Studies', icon: '📚' },
+      { command: 'signup', label: 'Sign Up Free', icon: '✨', isCta: true },
+      { command: 'demo', label: 'Book a Demo', icon: '📅', isCta: true }
     ];
 
     return (
       <div className="command-buttons">
-        {commands.map((cmd, i) => (
+        {buttons.map((btn, i) => (
           <button 
             key={i} 
-            className="command-button"
-            onClick={() => handleCommandClick(cmd.command)}
+            className={`command-button ${btn.isCta ? 'cta-button' : ''}`}
+            onClick={async () => {
+              if (btn.command === 'signup') {
+                window.open('https://periskope.ai/signup', '_blank');
+                return;
+              }
+              if (btn.command === 'demo') {
+                window.open('https://periskope.ai/demo', '_blank');
+                return;
+              }
+              await handleCommandClick(btn.command);
+            }}
           >
-            <span className="command">{cmd.command}</span>
-            <span className="command-description">{cmd.label}</span>
+            <span className="button-content">
+              <span className="button-icon">{btn.icon}</span>
+              <span className="button-text">{btn.label}</span>
+            </span>
           </button>
         ))}
       </div>
@@ -110,16 +170,24 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
 
   const formatMessageText = (text, isFirstMessage = false) => {
     if (!text) return null;
+    
+    // Simple markdown parser for bold text
+    const parseMarkdown = (text) => {
+      return text.split('*').map((part, i) => 
+        i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+      );
+    };
+    
     return (
-      <>
+      <div className="message-text">
         {text.split('\n').map((line, i) => (
           <React.Fragment key={i}>
-            {line}
+            {parseMarkdown(line)}
             <br />
           </React.Fragment>
         ))}
-        {isFirstMessage && messages.length === 1 && renderCommandButtons()}
-      </>
+        {isFirstMessage && renderCommandButtons(messages.length <= 2)}
+      </div>
     );
   };
 

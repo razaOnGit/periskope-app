@@ -226,49 +226,86 @@
 
 /* Command buttons */
 .command-buttons {
-  margin-top: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 10px 0;
 }
 
 .command-button {
   display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.9);
+  align-items: center;
+  background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 10px 12px;
-  text-align: left;
+  padding: 10px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-width: 140px;
+  flex: 1 0 calc(50% - 10px);
+  text-align: left;
+}
+
+.command-button.cta-button {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  font-weight: 500;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
 }
 
-.command-button:hover {
-  background: #f5f5f5;
-  border-color: #25D366;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.button-icon {
+  font-size: 1.2em;
 }
 
-.command-button:active {
-  transform: translateY(0);
-}
-
-.command {
-  font-weight: 500;
-  color: #25D366;
+.button-text {
   font-size: 14px;
-  margin-bottom: 2px;
+  font-weight: 500;
 }
 
-.command-description {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
+.command-button:not(.cta-button) .button-text {
+  color: #1f2937;
+}
+
+.command-button.cta-button .button-text {
+  color: white;
+}
+
+.command-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.command-button.cta-button:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Message text formatting */
+.message-text {
+  line-height: 1.6;
+}
+
+.message-text strong {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .command-button {
+    flex: 1 0 100%;
+  }
 }
 
 /* Links in messages */
