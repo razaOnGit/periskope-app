@@ -43,7 +43,8 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
     setIsTyping(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/process-message', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/process-message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +98,8 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
     
     try {
       // Send command to backend
-      const response = await fetch('http://localhost:5000/api/process-message', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/process-message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
