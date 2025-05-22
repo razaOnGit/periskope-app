@@ -46,43 +46,134 @@
     position: relative;
     font-family: Inter, "Inter Placeholder", sans-serif;
 }
-.nav-items a{
+.nav-items a {
     color: grey;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
-.nav-items a:hover{
+
+.nav-items a:hover {
+    color: white;
+}
+
+.login-btn {
+    background-color: #4CAF50;
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #45a049;
+}
+
+/* Mobile Toggle Styles */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hamburger span {
+    width: 30px;
+    height: 3px;
+    background: white;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .nav-items {
+        position: fixed;
+        top: 70px;
+        right: -100%;
+        flex-direction: column;
+        background-color: rgb(6, 28, 1);
+        width: 100%;
+        padding: 20px;
+        transition: right 0.3s ease;
+        z-index: 999;
+        margin: 0;
+        left: 0;
+        text-align: center;
+    }
+
+    .nav-items.active {
+        right: 0;
+    }
+
+    .nav-items a {
+        padding: 15px;
+        text-align: center;
+        display: block;
+        color: white;
+    }
+
+    .login-btn {
+        margin: 10px auto 0;
+        width: 100%;
+        max-width: 200px;
+        display: inline-block;
+        text-align: center;
+    }
+}
+
+.nav-items a:hover {
     color: rgb(32, 223, 7);
 }
-.login-btn{
+
+.login-btn {
     border: 1px solid rgba(2, 132, 32, 0.929);
     color: white;
     background-color: rgb(13, 202, 13);
     opacity: 0.8;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     border-radius: 10px;
-    align-content: center;
-    align-items: center;
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1px;
-    height: min-content;
-    justify-content: center;
-    padding: 12px 28px;
-    position: relative;
+    padding: 8px 20px;
     text-decoration: none;
-    width: min-content;
-    font-size: 16px;
-    font-weight: 510;
-   
-    font-family: Inter, "Inter Placeholder", sans-serif
-   
-}
-.login-btn:hover{
-    background-color: rgb(16, 227, 65);
-    color: white;
-    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 .whatsapp-container {
     position: fixed;
