@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# Periskope App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Periskope is a platform to manage WhatsApp groups and chats at scale. It enables you to connect multiple WhatsApp numbers, create tasks and tickets, integrate with your systems, and automate workflows on WhatsApp without requiring the WhatsApp Business API.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Manage WhatsApp groups and chats efficiently
+- Connect multiple WhatsApp numbers
+- Create tasks and tickets for better workflow management
+- Integrate with external systems and services
+- Automate workflows on WhatsApp
+- Chat support via WhatsApp and Telegram bot integration
+- Responsive and user-friendly web interface
 
-### `npm start`
+## Backend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The backend is a Node.js Express server that integrates with a Telegram bot to process messages and send responses.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Setup
 
-### `npm test`
+1. Navigate to the `backend` directory:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```bash
+   cd backend
+   ```
 
-### `npm run build`
+2. Install dependencies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Create a `.env` file in the `backend` directory and add your Telegram bot token:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```
+   TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+   ```
 
-### `npm run eject`
+### Running the Backend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- To start the server:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  ```bash
+  npm start
+  ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- For development with automatic restarts on changes:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  ```bash
+  npm run dev
+  ```
 
-## Learn More
+The backend server runs on port 5000 by default.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### API Endpoints
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- `POST /api/process-message`  
+  Process a message sent from the frontend and get a response.
 
-### Code Splitting
+- `POST /api/send-message`  
+  Send a message to all stored Telegram chat IDs.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Frontend
 
-### Analyzing the Bundle Size
+The frontend is a React application created with Create React App. It provides a user interface to interact with the backend and manage WhatsApp communications.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Setup
 
-### Making a Progressive Web App
+1. Navigate to the `periskope-app` directory:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   ```bash
+   cd periskope-app
+   ```
 
-### Advanced Configuration
+2. Install dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   ```bash
+   npm install
+   ```
 
-### Deployment
+### Running the Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- To start the development server:
 
-### `npm run build` fails to minify
+  ```bash
+  npm start
+  ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The frontend runs on port 3000 by default and opens in your browser at [http://localhost:3000](http://localhost:3000).
+
+## Useful Links
+
+- [Documentation](https://docs.periskope.app/get-started/introduction)
+- [Pricing](https://periskope.app/pricing)
+- [Login](https://console.periskope.app/login)
+- [Book a Demo](https://cal.com/team/periskope/demo)
+- [WhatsApp Chat Support](https://wa.me/+919289665999)
+
+## License
+
+This project is licensed under the terms specified by the Periskope team.
+
+---
+
+Powered by Periskope — managing WhatsApp communications at scale.
