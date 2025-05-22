@@ -4,8 +4,14 @@ import './Bot.css';
 
 const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeholder/80/80" }) => {
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! Welcome to Periskope. How can I help you manage your WhatsApp communications today?", sender: "bot", timestamp: new Date() }
+    {
+      id: 1,
+      text: "Hello! I'm Periskope Assistant. How can I help you today?",
+      sender: 'bot',
+      timestamp: new Date()
+    }
   ]);
+  const [showCommandButtons, setShowCommandButtons] = useState(true);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -20,23 +26,23 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
   };
 
   const handleSendMessage = async () => {
-    if (inputText.trim() === "") return;
-
-    // Add user message
+    if (inputText.trim() === '') return;
+    
     const userMessage = {
       id: Date.now(),
       text: inputText,
-      sender: "user",
+      sender: 'user',
       timestamp: new Date()
     };
+    
     setMessages(prev => [...prev, userMessage]);
-    setInputText("");
+    setInputText('');
+    setShowCommandButtons(false);
     
     // Show typing indicator
     setIsTyping(true);
     
     try {
-      // Send message to our backend for processing
       const response = await fetch('http://localhost:5000/api/process-message', {
         method: 'POST',
         headers: {
@@ -48,24 +54,23 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
       const data = await response.json();
       
       if (data.success) {
-        // Add bot response with formatted message
         const botResponse = {
           id: Date.now() + 1,
           text: data.message,
-          sender: "bot",
+          sender: 'bot',
           timestamp: new Date(),
-          type: data.type || 'info' // Add message type for styling
+          type: data.type || 'info'
         };
         setMessages(prev => [...prev, botResponse]);
       } else {
         throw new Error(data.error || 'Failed to process message');
       }
     } catch (error) {
-      console.error('Error processing message:', error);
+      console.error('Error sending message:', error);
       const errorResponse = {
         id: Date.now() + 1,
         text: 'Sorry, I encountered an error. Please try again later.',
-        sender: "bot",
+        sender: 'bot',
         timestamp: new Date(),
         type: 'error'
       };
@@ -85,6 +90,7 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
     };
     
     setMessages(prev => [...prev, userMessage]);
+    setShowCommandButtons(false);
     
     // Show typing indicator
     setIsTyping(true);
@@ -129,41 +135,33 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
     }
   };
 
-  const renderCommandButtons = (shouldShow = true) => {
-    if (!shouldShow) return null;
-    
+  const renderCommandButtons = () => {
     const buttons = [
       { command: '/features', label: 'Features', icon: '🚀' },
       { command: '/pricing', label: 'Pricing', icon: '💰' },
       { command: '/casestudies', label: 'Case Studies', icon: '📚' },
-      { command: 'signup', label: 'Sign Up Free', icon: '✨', isCta: true },
-      { command: 'demo', label: 'Book a Demo', icon: '📅', isCta: true }
+      { command: '/signup', label: 'Sign Up Free', icon: '✨', isCta: true },
+      { command: '/demo', label: 'Book a Demo', icon: '📅', isCta: true }
     ];
 
     return (
-      <div className="command-buttons">
-        {buttons.map((btn, i) => (
-          <button 
-            key={i} 
-            className={`command-button ${btn.isCta ? 'cta-button' : ''}`}
-            onClick={async () => {
-              if (btn.command === 'signup') {
-                window.open('https://periskope.ai/signup', '_blank');
-                return;
-              }
-              if (btn.command === 'demo') {
-                window.open('https://periskope.ai/demo', '_blank');
-                return;
-              }
-              await handleCommandClick(btn.command);
-            }}
-          >
-            <span className="button-content">
-              <span className="button-icon">{btn.icon}</span>
-              <span className="button-text">{btn.label}</span>
-            </span>
-          </button>
-        ))}
+      <div className="sticky-commands">
+        <div className="command-buttons">
+          {buttons.map((btn, i) => (
+            <button 
+              key={i} 
+              className={`command-button ${btn.isCta ? 'cta-button' : ''}`}
+              onClick={async () => {
+                await handleCommandClick(btn.command);
+              }}
+            >
+              <span className="button-content">
+                <span className="button-icon">{btn.icon}</span>
+                <span className="button-text">{btn.label}</span>
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     );
   };
@@ -206,6 +204,7 @@ const TelegramBot = ({ botName = "Periskope Assistant", botAvatar = "/api/placeh
       </div>
       
       <div className="messages-container">
+        {showCommandButtons && renderCommandButtons()}
         {messages.map((message) => (
           <div
             key={message.id}

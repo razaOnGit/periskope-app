@@ -225,14 +225,28 @@
 }
 
 /* Command buttons */
+.sticky-commands {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: white;
+  padding: 10px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
 .command-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 10px 16px;
-  background: #f8f9fa;
-  border-radius: 12px;
-  margin: 10px 0;
+  gap: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: none; /* Firefox */
+}
+
+.command-buttons::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .command-button {
@@ -241,13 +255,14 @@
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  min-width: 140px;
-  flex: 1 0 calc(50% - 10px);
+  min-width: 120px;
+  flex: 0 0 auto;
   text-align: left;
+  white-space: nowrap;
 }
 
 .command-button.cta-button {
@@ -255,6 +270,8 @@
   color: white;
   border: none;
   font-weight: 500;
+  flex: 1 0 auto;
+  max-width: 200px;
 }
 
 .button-content {
@@ -304,7 +321,16 @@
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .command-button {
-    flex: 1 0 100%;
+    min-width: 100px;
+    padding: 6px 10px;
+  }
+  
+  .button-icon {
+    font-size: 1em;
+  }
+  
+  .button-text {
+    font-size: 12px;
   }
 }
 
