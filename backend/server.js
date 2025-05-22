@@ -1,3 +1,4 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -14,18 +15,32 @@ app.use(express.json());
 // Initialize Telegram Bot
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
 
-// Store chat IDs for broadcasting
+// Store chat IDs and user states
 const chatIds = new Set();
+const userStates = new Map(); // In-memory store for user states
 
 // Listen for any kind of message
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
+  const userId = `telegram_${chatId}`; // Prefix to avoid conflicts
   chatIds.add(chatId); // Store chat ID for future messages
+  
+  // Get or initialize user state
+  const state = userStates.get(userId) || {};
   
   // Process the message and send response
   try {
-    const response = processMessage(msg.text || '');
-    bot.sendMessage(chatId, response.message, { parse_mode: 'Markdown' });
+    const response = processMessage(msg.text || '', state);
+    
+    // Update state if needed
+    if (response.state) {
+      userStates.set(userId, response.state);
+    }
+    
+    bot.sendMessage(chatId, response.message, { 
+      parse_mode: 'Markdown',
+      disable_web_page_preview: true
+    });
   } catch (error) {
     console.error('Error processing Telegram message:', error);
     bot.sendMessage(chatId, "I'm sorry, I encountered an error processing your message. Please try again.");
@@ -34,7 +49,7 @@ bot.on('message', (msg) => {
 
 // API endpoint to process messages from frontend
 app.post('/api/process-message', async (req, res) => {
-  const { message } = req.body;
+  const { message, userId = 'web_guest' } = req.body; // Default to 'web_guest' if no userId provided
   
   if (!message) {
     return res.status(400).json({ 
@@ -44,8 +59,16 @@ app.post('/api/process-message', async (req, res) => {
   }
 
   try {
+    // Get or initialize user state
+    const state = userStates.get(userId) || {};
+    
     // Process the message and get response
-    const response = processMessage(message);
+    const response = processMessage(message, state);
+    
+    // Update state if needed
+    if (response.state) {
+      userStates.set(userId, response.state);
+    }
     
     res.json({
       success: true,
@@ -53,47 +76,23 @@ app.post('/api/process-message', async (req, res) => {
     });
   } catch (error) {
     console.error('Error processing message:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      error: 'Failed to process message',
-      message: "I'm sorry, I encountered an error. Please try again."
+      error: 'Failed to process message'
     });
   }
-});
-
-// API endpoint to send message from frontend
-app.post('/api/send-message', (req, res) => {
-  const { message } = req.body;
-  
-  if (!message) {
-    return res.status(400).json({ error: 'Message is required' });
-  }
-
-  // Send message to all stored chat IDs
-  const sendPromises = Array.from(chatIds).map(chatId => 
-    bot.sendMessage(chatId, message)
-      .catch(error => {
-        console.error(`Error sending message to ${chatId}:`, error);
-        return { success: false, chatId, error: error.message };
-      })
-  );
-
-  Promise.all(sendPromises)
-    .then(results => {
-      const successCount = results.filter(r => r && r.message_id).length;
-      res.json({
-        success: true,
-        message: `Message sent to ${successCount} chat(s)`
-      });
-    })
-    .catch(error => {
-      console.error('Error sending messages:', error);
-      res.status(500).json({ error: 'Failed to send messages' });
-    });
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Bot is running...`);
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    success: false,
+    error: 'Internal server error'
+  });
 });
