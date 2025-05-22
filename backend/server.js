@@ -12,8 +12,21 @@ const PORT = process.env.PORT || 5000;
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const DOMAIN = process.env.DOMAIN || 'https://yourdomain.com';
 
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'https://periskope-clone-hazel.vercel.app', // Your Vercel frontend URL
+    'http://localhost:3000',             // Local development
+    'https://periskope-app-backend.onrender.com' // Your backend URL
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Initialize Telegram Bot without polling
@@ -26,23 +39,48 @@ const userStates = new Map();
 // Webhook setup
 const setupWebhook = async () => {
     try {
+        console.log('Starting webhook setup...');
+        
+        // Check current webhook info first
+        const currentWebhook = await bot.getWebHookInfo();
+        console.log('Current webhook info:', currentWebhook);
+        
         // Remove any existing webhook
+        console.log('Removing existing webhook...');
         await bot.deleteWebHook();
         
-        // Set up the webhook
+        // Set up the new webhook
         const webhookUrl = `${DOMAIN}/bot${BOT_TOKEN}`;
-        console.log(`Setting webhook to: ${webhookUrl}`);
+        console.log(`Setting up new webhook to: ${webhookUrl}`);
         
-        const webhookResult = await bot.setWebHook(webhookUrl);
+        // Set webhook with max connections and allowed updates
+        const webhookResult = await bot.setWebHook(webhookUrl, {
+            max_connections: 40,
+            allowed_updates: ['message', 'callback_query']
+        });
+        
         console.log('Webhook setup result:', webhookResult);
         
         // Verify webhook was set
         const webhookInfo = await bot.getWebHookInfo();
-        console.log('Webhook info:', webhookInfo);
+        console.log('Updated webhook info:', {
+            url: webhookInfo.url,
+            has_custom_certificate: webhookInfo.has_custom_certificate,
+            pending_update_count: webhookInfo.pending_update_count,
+            last_error_date: webhookInfo.last_error_date,
+            last_error_message: webhookInfo.last_error_message,
+            max_connections: webhookInfo.max_connections,
+            allowed_updates: webhookInfo.allowed_updates
+        });
         
+        return true;
     } catch (error) {
-        console.error('Error setting up webhook:', error);
-        process.exit(1);
+        console.error('Error in webhook setup:', {
+            message: error.message,
+            stack: error.stack,
+            response: error.response?.data
+        });
+        throw error; // Re-throw to be handled by the caller
     }
 };
 
@@ -126,26 +164,59 @@ app.post('/api/process-message', async (req, res) => {
 // Start the server
 const startServer = async () => {
   try {
-    // If you have SSL certificates for HTTPS, use them
-    // const options = {
-    //   key: fs.readFileSync('path/to/privkey.pem'),
-    //   cert: fs.readFileSync('path/to/cert.pem')
-    // };
-    // const server = https.createServer(options, app);
-    // server.listen(PORT, async () => {
-    //   console.log(`HTTPS Server running on port ${PORT}`);
-    //   await setupWebhook();
-    // });
+    // Check for required environment variables
+    if (!BOT_TOKEN) {
+      throw new Error('TELEGRAM_BOT_TOKEN is not set in environment variables');
+    }
+
+    // Log environment info
+    console.log('Starting server with configuration:', {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT,
+      DOMAIN: DOMAIN || 'Not set, using default',
+      BOT_TOKEN: BOT_TOKEN ? '***' + BOT_TOKEN.slice(-4) : 'Not set'
+    });
+
+    // For production, ensure DOMAIN is set
+    if (process.env.NODE_ENV === 'production' && !DOMAIN) {
+      throw new Error('DOMAIN environment variable must be set in production');
+    }
     
-    // For development with HTTP
-    app.listen(PORT, async () => {
-      console.log(`HTTP Server running on port ${PORT}`);
+    // Start the HTTP server
+    const server = app.listen(PORT, async () => {
+      console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+      
+      // Set up webhook in production
       if (process.env.NODE_ENV === 'production') {
-        await setupWebhook();
+        try {
+          console.log('Setting up webhook for production...');
+          await setupWebhook();
+          console.log('Webhook setup completed successfully');
+        } catch (error) {
+          console.error('Failed to set up webhook:', error);
+          // Don't exit in production to allow for debugging
+          console.log('Continuing without webhook setup...');
+        }
       } else {
         console.log('Running in development mode. Webhook setup skipped.');
-        console.log('To test locally, use ngrok: https://ngrok.com/');
+        console.log('To test with webhooks locally, use ngrok: https://ngrok.com/');
+        console.log(`Then set DOMAIN to your ngrok URL and restart the server`);
       }
+    });
+
+    // Handle server errors
+    server.on('error', (error) => {
+      console.error('Server error:', error);
+      process.exit(1);
+    });
+    
+    // Handle process termination
+    process.on('SIGINT', () => {
+      console.log('Shutting down server...');
+      server.close(() => {
+        console.log('Server has been stopped');
+        process.exit(0);
+      });
     });
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -154,7 +225,12 @@ const startServer = async () => {
 };
 
 // Start the application
-startServer();
+if (require.main === module) {
+  startServer().catch(error => {
+    console.error('Unhandled error in server startup:', error);
+    process.exit(1);
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
