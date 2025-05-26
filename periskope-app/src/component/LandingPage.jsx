@@ -8,12 +8,40 @@ const LandingPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(prevState => !prevState);
   };
 
   const closeNav = () => {
     setIsOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling when menu is closed
   };
+
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      const nav = document.querySelector('.nav-items');
+      const toggle = document.querySelector('.mobile-toggle');
+      
+      if (isOpen && nav && toggle && 
+          !nav.contains(event.target) && 
+          !toggle.contains(event.target)) {
+        closeNav();
+      }
+    };
+
+    // Disable scrolling when menu is open
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -24,28 +52,29 @@ const LandingPage = () => {
         </div>
         
         {/* Mobile Toggle Button */}
-        <button 
-          className="mobile-toggle" 
-          onClick={toggleNav}
-          aria-label="Toggle navigation"
-          aria-expanded={isOpen}
-        >
-          <div className={`hamburger ${isOpen ? 'open' : ''}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-
-        <div className={`nav-items ${isOpen ? 'active' : ''}`}>
-          <a href="#Features" onClick={closeNav}>Features</a>
-          <a href="#Integrations" onClick={closeNav}>Integrations</a>
-          <a href="#Case-Studies" onClick={closeNav}>Case Studies</a>
-          <a href="#Resources" onClick={closeNav}>Resources</a>
-          <a href="https://docs.periskope.app/get-started/introduction" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Affiliates</a>
-          <a href="https://periskope.app/pricing" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Pricing</a>
-          <a href="https://console.periskope.app/login" className="login-btn" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Login</a>
+      <button 
+        className="mobile-toggle" 
+        onClick={toggleNav}
+        aria-label="Toggle navigation"
+        aria-expanded={isOpen}
+      >
+        <div className={`hamburger ${isOpen ? 'open' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </button>
+
+      {/* Navigation Items */}
+      <div className={`nav-items ${isOpen ? 'active' : ''}`}>
+        <a href="#Features" onClick={closeNav}>Features</a>
+        <a href="#Integrations" onClick={closeNav}>Integrations</a>
+        <a href="#Case-Studies" onClick={closeNav}>Case Studies</a>
+        <a href="#Resources" onClick={closeNav}>Resources</a>
+        <a href="https://docs.periskope.app/get-started/introduction" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Affiliates</a>
+        <a href="https://periskope.app/pricing" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Pricing</a>
+        <a href="https://console.periskope.app/login" className="login-btn" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Login</a>
+      </div>
       </nav>
 
       <div className="whatsapp-container">
