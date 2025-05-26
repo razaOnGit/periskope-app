@@ -13,7 +13,8 @@ const LandingPage = () => {
 
   const closeNav = () => {
     setIsOpen(false);
-    document.body.style.overflow = 'auto'; // Re-enable scrolling when menu is closed
+    document.body.style.overflow = 'auto';
+    document.body.style.pointerEvents = 'auto';
   };
 
   // Close menu when clicking outside
@@ -32,14 +33,17 @@ const LandingPage = () => {
     // Disable scrolling when menu is open
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.pointerEvents = 'none';
     } else {
       document.body.style.overflow = 'auto';
+      document.body.style.pointerEvents = 'auto';
     }
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = 'auto';
+      document.body.style.pointerEvents = 'auto';
     };
   }, [isOpen]);
 
@@ -108,7 +112,7 @@ const LandingPage = () => {
           </p>
 
           <div className="buttons">
-            <a href="/signup" className="btn green">Sign Up for Free </a>
+            <a href="https://console.periskope.app/login" className="btn green">Sign Up for Free </a>
             <a href=' https://cal.com/team/periskope/demo' className="btn white">Book a Demo</a>
           </div>
 
