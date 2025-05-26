@@ -38,7 +38,7 @@ The backend is a Node.js Express server that integrates with a Telegram bot to p
 
 ### Running the Backend
 
-- To start the server:
+- To start the server //backend folder ---- cd backend:
 
   ```bash
   npm start
@@ -47,7 +47,7 @@ The backend is a Node.js Express server that integrates with a Telegram bot to p
 - For development with automatic restarts on changes:
 
   ```bash
-  npm run dev
+  npm run dev     //backend cd backend
   ```
 
 The backend server runs on port 5000 by default.
@@ -80,7 +80,7 @@ The frontend is a React application created with Create React App. It provides a
 
 ### Running the Frontend
 
-- To start the development server:
+- To start the development server://frontend folder ---- cd periskope-app
 
   ```bash
   npm start
