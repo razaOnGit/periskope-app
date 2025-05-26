@@ -71,10 +71,10 @@ const LandingPage = () => {
 
       {/* Navigation Items */}
       <div className={`nav-items ${isOpen ? 'active' : ''}`}>
-        <a href="#Features" onClick={closeNav}>Features</a>
-        <a href="#Integrations" onClick={closeNav}>Integrations</a>
-        <a href="#Case-Studies" onClick={closeNav}>Case Studies</a>
-        <a href="#Resources" onClick={closeNav}>Resources</a>
+        <a href="https://docs.periskope.app/features/multi-number-inbox" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Features</a>
+        <a href="https://docs.periskope.app/integrations" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Integrations</a>
+        <a href="https://docs.periskope.app/case-studies" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Case Studies</a>
+        <a href="https://docs.periskope.app/resources" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Resources</a>
         <a href="https://docs.periskope.app/get-started/introduction" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Affiliates</a>
         <a href="https://periskope.app/pricing" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Pricing</a>
         <a href="https://console.periskope.app/login" className="login-btn" target="_blank" rel="noopener noreferrer" onClick={closeNav}>Login</a>
