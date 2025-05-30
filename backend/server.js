@@ -29,6 +29,21 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    message: 'Service is healthy'
+  });
+});
+
+// Simple ping endpoint for internal monitoring
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 // Initialize Telegram Bot without polling
 const bot = new TelegramBot(BOT_TOKEN);
 
@@ -162,7 +177,14 @@ app.post('/api/process-message', async (req, res) => {
 });
 
 // Start the server
+// Start the server
 const startServer = async () => {
+  // Log server start
+  console.log('🚀 Starting Periskope server...');
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔄 Health check available at: http://localhost:${PORT}/health`);
+  console.log(`🔄 Ping endpoint available at: http://localhost:${PORT}/ping`);
+
   try {
     // Check for required environment variables
     if (!BOT_TOKEN) {
